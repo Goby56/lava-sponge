@@ -15,19 +15,24 @@ import net.minecraft.util.registry.Registry;
 public class ModBlocks {
 
     public static final Block DRY_LAVA_SPONGE_BLOCK = registerBlock("lava_sponge",
-            new Block(FabricBlockSettings.of(Material.SPONGE).strength(1f, 1f).requiresTool().sounds(BlockSoundGroup.ANCIENT_DEBRIS)), ItemGroup.BUILDING_BLOCKS);
+            new LavaSpongeBlock(FabricBlockSettings.of(Material.SPONGE).strength(1f, 1f).requiresTool().sounds(BlockSoundGroup.ANCIENT_DEBRIS)), ItemGroup.BUILDING_BLOCKS, true);
 
     public static final Block WET_LAVA_SPONGE_BLOCK = registerBlock("wet_lava_sponge",
-            new Block(FabricBlockSettings.of(Material.SPONGE).strength(1.2f, 1.2f).requiresTool().sounds(BlockSoundGroup.NETHER_GOLD_ORE)), ItemGroup.BUILDING_BLOCKS);
+            new WetLavaSpongeBlock(FabricBlockSettings.of(Material.SPONGE).strength(1.2f, 1.2f).requiresTool().sounds(BlockSoundGroup.NETHER_GOLD_ORE)), ItemGroup.BUILDING_BLOCKS, true);
 
-    private static Block registerBlock(String name, Block block, ItemGroup group) {
-        registerBlockItem(name, block, group);
+    private static Block registerBlock(String name, Block block, ItemGroup group, boolean fireproof) {
+        registerBlockItem(name, block, group, fireproof);
         return Registry.register(Registry.BLOCK, new Identifier(LavaSponge.MOD_ID, name), block);
     }
 
-    private static Item registerBlockItem(String name, Block block, ItemGroup group) {
-        return Registry.register(Registry.ITEM, new Identifier(LavaSponge.MOD_ID, name),
-                new BlockItem(block, new FabricItemSettings().group(group)));
+    private static Item registerBlockItem(String name, Block block, ItemGroup group, boolean fireproof) {
+        if (fireproof) {
+            return Registry.register(Registry.ITEM, new Identifier(LavaSponge.MOD_ID, name),
+                    new BlockItem(block, new FabricItemSettings().group(group).fireproof()));
+        } else {
+            return Registry.register(Registry.ITEM, new Identifier(LavaSponge.MOD_ID, name),
+                    new BlockItem(block, new FabricItemSettings().group(group)));
+        }
     }
 
     public static void registerModBlocks() {
